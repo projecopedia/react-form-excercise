@@ -1,24 +1,53 @@
-import logo from "./logo.svg";
-import "./App.css";
+import React, { useEffect, useState } from "react";
+import Forms from "./components/Forms";
+import ShowData from "./components/ShowData";
 
 function App() {
+  const [data, setData] = useState([]);
+  const [isFetching, setIsFetching] = useState(false);
+  const [name, setName] = useState("");
+  const [edit, setEdit] = useState("");
+
+  useEffect(() => {
+    const fetchData = () => {
+      const response = localStorage.getItem("users");
+      if (response) {
+        setData(JSON.parse(response));
+        setIsFetching(false);
+      }
+    };
+
+    fetchData();
+  }, [isFetching]);
+
+  const clearData = () => {
+    localStorage.removeItem("users");
+    setData([]);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Forms
+        data={data}
+        setData={setData}
+        name={name}
+        setName={setName}
+        setIsFetching={setIsFetching}
+        edit={edit}
+        setEdit={setEdit}
+      />
+      <br />
+      <button type="button" onClick={clearData}>
+        Clear
+      </button>
+      <ShowData
+        data={data}
+        setData={setData}
+        setName={setName}
+        setEdit={setEdit}
+        setIsFetching={setIsFetching}
+      />
+    </>
   );
 }
 
